@@ -24,7 +24,7 @@ def clear_cache(key: str | int):
     cache_map.pop(key, None)
 
 
-def ttl_cache(key: Callable = format_key, ttl: int = 2) -> Callable:
+def ttl_cache(wrapped: Callable = None, key: Callable = format_key, ttl: int = 2) -> Callable:
 
     def wrapper(func):
         if not asyncio.iscoroutinefunction(func):
@@ -43,5 +43,7 @@ def ttl_cache(key: Callable = format_key, ttl: int = 2) -> Callable:
                 event_loop.call_later(ttl, clear_cache, cache_key)
             return result
         return inner
-
-    return wrapper
+    if not wrapped:
+        return wrapper
+    elif callable(wrapped):
+        return wrapper(wrapped)

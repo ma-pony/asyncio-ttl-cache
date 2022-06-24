@@ -1,11 +1,12 @@
 [tool.poetry]
 name = "asyncio-ttl-cache"
-version = "0.0.3"
+version = "0.0.4"
 description = "Async TTL cache"
 authors = ["Pony Ma <mtf201013@gmail.com>"]
 packages = [
     { include = "asyncio_ttl_cache" }
 ]
+repository = "https://github.com/ma-pony/asyncio-ttl-cache"
 
 [tool.poetry.dependencies]
 python = "^3.10"
