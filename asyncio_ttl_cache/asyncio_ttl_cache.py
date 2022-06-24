@@ -1,30 +1,23 @@
 import asyncio
 import functools
-from typing import Any, Callable
-
+from typing import Callable, Union
 
 cache_map = {}
 
 
 def format_key(*args: tuple, **kwargs: dict) -> int:
-    def _hash(param: Any):
-        if isinstance(param, tuple):
-            return tuple(map(_hash, param))
-        if isinstance(param, dict):
-            return tuple(map(_hash, param.items()))
-        elif hasattr(param, '__dict__'):
-            return str(vars(param))
-        else:
-            return str(param)
-
-    return hash(_hash(args) + _hash(kwargs))
+    return hash(str(args) + str(kwargs))
 
 
 def clear_cache(key: str | int):
     cache_map.pop(key, None)
 
 
-def ttl_cache(wrapped: Callable = None, key: Callable = format_key, ttl: int = 2) -> Callable:
+def ttl_cache(
+    wrapped: Union[Callable, None] = None,
+    key: Callable = format_key,
+    ttl: int = 2
+) -> Callable:
 
     def wrapper(func):
         if not asyncio.iscoroutinefunction(func):

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asyncio-ttl-cache"
-version = "0.0.4"
+version = "0.0.5"
 description = "Async TTL cache"
 authors = ["Pony Ma <mtf201013@gmail.com>"]
 packages = [
