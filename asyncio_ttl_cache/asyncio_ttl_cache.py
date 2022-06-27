@@ -1,12 +1,15 @@
+import json
 import asyncio
 import functools
+
 from typing import Callable, Union, Any
 
 cache_map = {}
 lock = asyncio.Lock()
 
-def format_key(*args: tuple, **kwargs: dict) -> int:
-    return hash(str(args) + str(kwargs))
+
+def format_key(args: tuple, kwargs: dict) -> int:
+    return hash(json.dumps((args, kwargs), sort_keys=True))
 
 
 def clear_cache(key: str | int):
@@ -39,7 +42,6 @@ def ttl_cache(
     key: Callable = format_key,
     ttl: int | float = 2
 ) -> Callable:
-
     def wrapper(func):
         if not asyncio.iscoroutinefunction(func):
             raise ValueError(f"{func} is not coroutine function.")
@@ -67,7 +69,9 @@ def ttl_cache(
                 event_loop = asyncio.get_event_loop()
                 event_loop.call_later(ttl, clear_cache, cache_key)
                 return await call.result()
+
         return inner
+
     if not wrapped:
         return wrapper
     elif callable(wrapped):
