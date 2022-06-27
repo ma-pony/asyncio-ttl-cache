@@ -54,7 +54,7 @@ async def test_single_flight():
     cost = 0.1
     ttl = 0.1
 
-    @ttl_cache(ttl=0.1)
+    @ttl_cache(ttl=ttl)
     async def foo(a) -> uuid.UUID:
         await asyncio.sleep(cost)
         return uuid.uuid1()
